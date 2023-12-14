@@ -1,0 +1,59 @@
+version: '3.9'
+services:
+  frontend:
+    depends_on:
+      - backend
+    image: node:latest
+    container_name: movie_requester_frontend
+    volumes:
+      - ./frontend:/workspace
+    ports:
+      - 8080:8080
+    env_file:
+      .env/frontend.env
+    working_dir: /workspace
+    command: sh /workspace/script.sh
+    restart: unless-stopped
+  backend:
+    depends_on:
+      - database
+    image: python:latest
+    container_name: movie_requester_backend
+    volumes:
+      - ./backend:/workspace
+    ports:
+      - 3000:3000
+    env_file:
+      .env/backend.env
+    working_dir: /workspace
+    command: sh /workspace/script.sh
+    restart: unless-stopped
+  database:
+    image: postgres:latest
+    container_name: movie_requester_db
+    volumes:
+      - movie_requester_v:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    env_file:
+      .env/database.env
+    restart: unless-stopped
+  pgadmin:
+    depends_on:
+      - database
+    image: dpage/pgadmin4:latest
+    container_name: movie_requester_pgadmin
+    ports:
+      - 5050:80
+    env_file:
+      - .env/pgadmin.env
+    restart: unless-stopped
+
+volumes:
+  movie_requester_v:
+    driver: local
+
+networks:
+  movie_requester_network:
+    driver: bridge
+    name: movie_requester_network

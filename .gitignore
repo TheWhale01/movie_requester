@@ -1,0 +1,6 @@
+.env/
+__*.py
+.vscode/
+__py*
+nodes_modules
+backend/env/
