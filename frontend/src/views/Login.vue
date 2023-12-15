@@ -8,8 +8,8 @@
 					<Input placeholder='e-mail / username' type="text" @input-finished="getUsername" />
 					<Input placeholder='password' type='password' @input-finished="getPassword" />
 					<Button @callback='login'>Login</Button>
+					<ErrorMessage v-if="show_login_error_msg">{{ login_error_msg }}</ErrorMessage>
 				</form>
-				<ErrorMessage v-if="show_login_error_msg">{{ login_error_msg }}</ErrorMessage>
 			</div>
 			<div class="border"></div>
 			<div class="signup_container">
@@ -20,8 +20,8 @@
 					<Input placeholder='password' type='password' @input-finished="getPassword" />
 					<Input placeholder='repeat password' type='password' @input-finished="getPasswordConfirmation" />
 					<Button @callback='signup'>Sign Up</Button>
+					<ErrorMessage v-if="show_signup_error_msg">{{ signup_error_message }}</ErrorMessage>
 				</form>
-				<ErrorMessage v-if="show_signup_error_msg">{{ signup_error_message }}</ErrorMessage>
 			</div>
 		</div>
 	</div>
@@ -101,6 +101,7 @@ h1 {
 	padding-top: 50px;
 	position: absolute;
 	top: 0;
+	width: 100%;
 }
 
 h2 {
@@ -110,7 +111,6 @@ h2 {
 .login_page_container {
 	display: flex;
 	align-items: center;
-	justify-content: center;
 	height: 100vh;
 }
 
@@ -126,7 +126,6 @@ h2 {
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	/* border: 2px solid red; */
 	justify-content: space-between;
 }
 
