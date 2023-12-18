@@ -28,6 +28,7 @@ export default {
 </script>
 <style scoped>
 input {
+	display: block;
 	background-color: #121a2a;
 	border: 2px solid #f6f9f9;
 	font-size: 20px;

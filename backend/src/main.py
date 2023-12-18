@@ -1,22 +1,20 @@
-import os
-import uvicorn
-from sqlalchemy.orm import Session
-from fastapi import FastAPI, Depends
-from .database import SessionLocal, engine
+from .include import *
+from .database import SessionLocal, engine, get_db
 from . import models
-from .schemas import UserCreate, User
-from .crud import create_user
+from .schemas import User, UserBase, UserCreate
+from .crud import get_user_by_username
+from .auth import create_jwt_token, get_current_user
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-
-def get_db():
-	db = SessionLocal()
-	try:
-		yield db
-	finally:
-		db.close()
+app.add_middleware(
+	CORSMiddleware,
+	allow_origins=['*'],
+	allow_credentials=True,
+	allow_methods=["*"],
+	allow_headers=["*"],
+)
 
 @app.get('/')
 async def root():
@@ -24,6 +22,17 @@ async def root():
 		'message': 'Hello, World'
 	}
 
-@app.post('/signup')
-async def signup(user: UserCreate, db: Session = Depends(get_db)):
-	return create_user(db, user)
+@app.get('/login')
+async def login_from_token(current_user: dict = Depends(get_current_user)):
+    return {'user': current_user}
+
+@app.post('/login')
+async def login(user: UserCreate, db: Session = Depends(get_db)):
+    db_user = get_user_by_username(db, user.username)
+    if not db_user:
+        raise HTTPException(status_code=401, detail='No such user')
+    if not bcrypt.checkpw(user.password.encode('utf-8'), db_user.password.encode('utf-8')):
+        raise HTTPException(status_code=401, detail='Wrong password')
+    token = create_jwt_token(db_user.id)
+    return {'user': db_user, 'token': token}
+

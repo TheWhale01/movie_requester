@@ -10,7 +10,8 @@ export default defineConfig({
   ],
   server: {
 		host: process.env.VITE_HOST,
-		port: Number(process.env.VITE_PORT)
+		port: Number(process.env.VITE_PORT),
+		cors: true,
   },
   preview: {
 		port: Number(process.env.VITE_PORT),	

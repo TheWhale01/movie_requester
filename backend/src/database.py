@@ -1,9 +1,6 @@
-import os
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from .include import *
 
-DB_URL = f'postgresql://{os.environ["DB_USERNAME"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}/{os.environ["DB_NAME"]}'
+DB_URL = f'postgresql://{environ["DB_USERNAME"]}:{environ["DB_PASSWORD"]}@{environ["DB_HOST"]}/{environ["DB_NAME"]}'
 
 engine = create_engine(
 	DB_URL
@@ -11,3 +8,10 @@ engine = create_engine(
 
 SessionLocal =  sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

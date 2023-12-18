@@ -26,11 +26,13 @@ You will have to populate the *.env files with these environment variables
 	- DB_PASSWORD=
 	- DB_PORT=
 	- DB_HOST=
+    - JWT_SECRET=
+    - JWT_ALGORITHM=
 - frontend.env
 	- VITE_PORT=
 	- VITE_HOST=
-	- BACKEND_HOST=
-	- BACKEND_PORT=
+	- VITE_BACKEND_HOST=
+	- VITE_BACKEND_PORT=
 - database.env
 	- POSTGRES_DB=
 	- POSTGRES_USER=
