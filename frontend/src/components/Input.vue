@@ -18,7 +18,7 @@ export default {
 			clearTimeout(this.typingTimeout);
 			this.typingTimeout = setTimeout(() => {
 				this.$emit('input-finished', this.output);
-			}, 500);
+			}, 100);
 		},
 		handleBlur(): void {
 			this.$emit('input-finished', this.output);
