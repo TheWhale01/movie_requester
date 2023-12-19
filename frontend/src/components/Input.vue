@@ -1,5 +1,5 @@
 <template>
-	<input :placeholder="placeholder" :type='type' v-model='output' @input='handleInput' @blur='handleBlur'>
+	<input :placeholder="placeholder" :type='type' v-model='output' @input='handleInput' >
 </template>
 <script lang='ts'>
 export default {
@@ -20,9 +20,6 @@ export default {
 				this.$emit('input-finished', this.output);
 			}, 100);
 		},
-		handleBlur(): void {
-			this.$emit('input-finished', this.output);
-		}
 	},
 };
 </script>

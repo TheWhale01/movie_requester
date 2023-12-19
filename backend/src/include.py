@@ -1,6 +1,8 @@
 import jwt
 import bcrypt
+import requests
 from os import environ
+from os import path
 from datetime import datetime, timedelta
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer

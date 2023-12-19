@@ -4,8 +4,10 @@ from . import models
 from .schemas import User, UserBase, UserCreate
 from .crud import get_user_by_username
 from .auth import create_jwt_token, get_current_user
+from .themoviedb import TheMovieDB
 
 models.Base.metadata.create_all(bind=engine)
+themoviedb = TheMovieDB(include_adult=True)
 
 app = FastAPI()
 app.add_middleware(
@@ -36,3 +38,12 @@ async def login(user: UserCreate, db: Session = Depends(get_db)):
     token = create_jwt_token(db_user.id)
     return {'user': db_user, 'token': token}
 
+@app.get('/search')
+async def search(query: str):
+    response = themoviedb.search(query)
+    return response
+
+@app.get('/get_tv_details')
+async def get_tv_details(id: int):
+    response = themoviedb.get_tv_details(id)
+    return response

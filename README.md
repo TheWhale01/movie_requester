@@ -8,9 +8,11 @@ replacement. Hope you'll enjoy it.
 ## How to start ?
 1) Requirements
 	1. [docker](https://www.docker.com/)
+    2. Create a TheMovieDB API key [here](https://developer.themoviedb.org/docs/getting-started)
+    3. Copy the api token from your account
 2) setup
 ```shell
- git clone https://github.com/TheWhale01/movie_requester.git
+git clone https://github.com/TheWhale01/movie_requester.git
 cd movie_requester
 mkdir .env
 cd .env
@@ -28,6 +30,7 @@ You will have to populate the *.env files with these environment variables
 	- DB_HOST=
     - JWT_SECRET=
     - JWT_ALGORITHM=
+    - THE_MOVIE_DB_KEY=
 - frontend.env
 	- VITE_PORT=
 	- VITE_HOST=

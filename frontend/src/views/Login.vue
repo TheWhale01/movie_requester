@@ -117,4 +117,8 @@ h2 {
 	height: 100%;
 }
 
+.login_container form Button {
+	width: 100%;
+}
+
 </style>
