@@ -1,8 +1,10 @@
 <template>
 	<div class='card_container'
 		:style="{'background-image': `url(${media.poster})`}">
-		<img :src="media.poster" />
-		<Button class="request_btn" @callback='request'>Request</Button>
+		<img class="media_poster" :src="media.poster" @click="redirect" />
+		<span v-if="!media.poster_found">{{ media.title }}</span>
+		<img class="check_icon" v-if="media.requested" src="../assets/images/check.png" />
+		<Button v-if="!media.requested" class="request_btn" @callback='request'>Request</Button>
 	</div>
 </template>
 <script lang='ts'>
@@ -33,7 +35,22 @@ export default {
 	},
 
 	methods: {
-		async request(): Promise<void> { console.log('bonsoir'); }
+		async request(): Promise<void> { console.log('bonsoir'); },
+		redirect(): void {
+			let type: string = '';
+			switch (this.media.type) {
+				case MediaType.MOVIE:
+					type = 'movie'
+					break;
+				case MediaType.TVSHOW:
+					type = 'tv';
+					break ;
+				default:
+					break;
+			}
+			const link = `https://www.themoviedb.org/${type}/${this.media.tmdb_id}`;
+			window.open(link, '_blank');
+		},
 	},
 };
 </script>
@@ -52,7 +69,7 @@ export default {
 
 .card_container:hover .request_btn { display: block; }
 
-img {
+.media_poster {
 	width: 300px;
 	height: auto;
 	opacity: 0;
@@ -62,5 +79,20 @@ img {
 	position: absolute;
 	bottom: 15px;
 	display: none;
+}
+
+span {
+	position: absolute;
+	padding-top: 15px;
+	font-size: 1.5em;
+}
+
+.check_icon {
+	position: absolute;
+	right: 0;
+	width: 35px;
+	height: auto;
+	padding-right: 15px;
+	padding-top: 15px;
 }
 </style>

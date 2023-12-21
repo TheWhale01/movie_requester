@@ -7,9 +7,8 @@ replacement. Hope you'll enjoy it.
 
 ## How to start ?
 1) Requirements
-	1. [docker](https://www.docker.com/)
-    2. Create a TheMovieDB API key [here](https://developer.themoviedb.org/docs/getting-started)
-    3. Copy the api token from your account
+	- [docker](https://www.docker.com/)
+    - Create a TheMovieDB API key [here](https://developer.themoviedb.org/docs/getting-started)
 2) setup
 ```shell
 git clone https://github.com/TheWhale01/movie_requester.git
@@ -48,4 +47,19 @@ You will have to populate the *.env files with these environment variables
 3) start
 ```shell
 docker compose up --build -d
+```
+
+## Migrations
+Database migrations are powered by alembic.
+Unfortunately, for now, the database migration are not automatically applied to
+the database.
+
+Here are the steps to follow:
+
+```shell
+docker exec -it movie_requester_backend /bin/bash
+cd src
+python3 -m alembic revision --autogenerate -m "" #Put a message (like a git commit)
+python3 -m alembic upgrade head #Applying last migration
+exit
 ```

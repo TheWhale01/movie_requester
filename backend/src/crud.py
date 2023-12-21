@@ -1,6 +1,8 @@
-from .include import *
-from . import models, schemas
-from .privilege import Privilege
+from include import *
+import models, schemas
+from privilege import Privilege
+from languages import Languages
+from schemas import UserCreate, RequestCreate
 
 def get_user_by_id(db: Session, user_id: int):
 	return db.query(models.User).filter(models.User.id == user_id).first()
@@ -8,12 +10,16 @@ def get_user_by_id(db: Session, user_id: int):
 def get_user_by_username(db: Session, username: str):
 	return db.query(models.User).filter(models.User.username == username).first()
 
-# def get_request_by_id(db: Session, request_id: int):
-#	return db.query(models.Request).filter(models.Request.id == request_id).first()
+def create_user(db: Session, user: UserCreate):
+	hashedpwd = bcrypt.hashpw(user.password.encode(), bcrypt.gensalt()).decode()
+	db_user = models.User(
+		username=user.username,
+		password = hashedpwd,
+	)
+	db.add(db_user)
+	db.commit()
+	db.refresh(db_user)
 
-# def create_request(db: Session, request: schemas.RequestCreate, user_id: int):
-#	db_request = models.Request(**request.dict(), user_id=user_id)
-#	db.add(db_request)
-#	db.commit()
-#	db.refresh(db_request)
-#	return db_request
+def get_request_by_id(db: Session, request_id: int):
+	return db.query(models.Request).filter(models.Request.id == request_id).first()
+

@@ -17,7 +17,7 @@
 						</ul>
 					</div>
 					<div class="tvshow_container">
-						<h2>TV Show</h2>
+						<h2>TV Shows</h2>
 						<ul>
 							<li v-for="tvshow in tv_shows">
 								<MediaCard :media="tvshow" />
@@ -75,6 +75,7 @@ export default {
 			}
 			this.query = value;
 		},
+
 		async search(): Promise<void> {
 			this.result_found = false;
 			this.movies = [];
@@ -92,14 +93,25 @@ export default {
 			const response_json = await response.json();
 			for (let item of response_json['results']) {
 				let poster_path: string = '';
+				let poster_found: boolean = true;
+				let requested: boolean = false;
+
+				//TODO: check if the movie is already requested in the database
 				if ('poster_path' in item && item['poster_path'])
 					poster_path = this.base_poster_path + item['poster_path'];
+				else {
+					poster_path = 'https://artworks.thetvdb.com/banners/images/missing/movie.jpg';
+					poster_found = false;
+				}
 				if (item['media_type'] == 'movie') {
 					this.movies.push({
 						title: item['title'],
 						type: MediaType.MOVIE,
 						nb_seasons: 0,
+						tmdb_id: item['id'],
 						poster: poster_path,
+						poster_found: poster_found,
+						requested: requested,
 					});
 				}
 				else if (item['media_type'] == 'tv') {
@@ -113,8 +125,11 @@ export default {
 					this.tv_shows.push({
 						title: item['name'],
 						type: MediaType.TVSHOW,
+						tmdb_id: item['id'],
 						nb_seasons: nb_seasons['number_of_seasons'],
 						poster: poster_path,
+						poster_found: poster_found,
+						requested: requested,
 					});
 				}
 			}
@@ -128,6 +143,12 @@ ul {
 	display: flex;
 	flex-direction: row;
 	overflow-x: scroll;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+ul::-webkit-scrollbar {
+	display: none;
 }
 
 form {
@@ -160,15 +181,15 @@ form Button {
 	flex-direction: column;
 	width: 85%;
 	padding-top: 15px;
-	padding-left: 2%;
-	padding-right: 2%;
+	padding-left: 15px;
+	padding-right: 15px;
 }
 
 .result_field {
 	display: flex;
 	height: 100%;
-	padding-top: 2%;
-	padding-bottom: 2%;
+	padding-top: 15px;
+	padding-bottom: 15px;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;

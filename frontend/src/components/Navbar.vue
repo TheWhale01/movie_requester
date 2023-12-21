@@ -13,17 +13,19 @@ h1 {
 }
 
 .navbar {
-	padding-left: 20px;
+	padding-left: 15px;
+	padding-right: 15px;
 	display: flex;
 	width: 15%;
 	height: 100%;
 	flex-direction: column;
 	justify-content: space-between;
 	background-color: #121a2a;
+	min-width: 200px;
 }
 
 .navbar_footer {
-	padding-bottom: 20px;
+	padding-bottom: 15px;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;

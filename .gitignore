@@ -4,3 +4,4 @@ __*.py
 __py*
 nodes_modules
 backend/env/
+*Zone.Identifier

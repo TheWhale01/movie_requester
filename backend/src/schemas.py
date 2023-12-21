@@ -1,29 +1,29 @@
 from pydantic import BaseModel
 
+class RequestBase(BaseModel):
+	tmdb_id: int
+	user_id: int
+
+class RequestCreate(RequestBase):
+	pass
+
+class Request(RequestBase):
+	id: int
+	date: str
+	status: int
+
 class UserBase(BaseModel):
 	username: str
 
 class UserCreate(UserBase):
-    password: str
+	password: str
 
 class User(UserBase):
 	id: int
-	# requests: list[Request] = []
+	language: str
 	privilege: int
+	profile_picture: str
+	requests: list[Request] = []
 
 	class Config:
 		from_attributes = True
-
-# class RequestBase(BaseModel):
-# 	user_id: int
-# 	theMovieDB: str
-# 	date: str
-
-# class RequestCreate(RequestBase):
-# 	pass
-
-# class Request(RequestBase):
-# 	id: int
-# 	status: int
-# 	class Config:
-# 		from_attributes = True

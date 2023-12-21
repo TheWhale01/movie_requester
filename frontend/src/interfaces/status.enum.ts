@@ -1,6 +1,7 @@
 enum Status {
-	USER,
-	ADMIN,
+	PENDING,
+	ACCEPTED,
+	REFUSED,
 };
 
 export default Status;

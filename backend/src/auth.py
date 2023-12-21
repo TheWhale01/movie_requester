@@ -1,6 +1,6 @@
-from .include import *
-from .crud import get_user_by_id
-from .database import get_db
+from include import *
+from crud import get_user_by_id
+from database import get_db
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='login')
 
