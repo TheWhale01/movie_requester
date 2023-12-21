@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 class RequestBase(BaseModel):
 	tmdb_id: int
-	user_id: int
+	type: int
 
 class RequestCreate(RequestBase):
 	pass
@@ -10,6 +10,7 @@ class RequestCreate(RequestBase):
 class Request(RequestBase):
 	id: int
 	date: str
+	user_id: int
 	status: int
 
 class UserBase(BaseModel):

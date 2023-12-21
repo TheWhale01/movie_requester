@@ -1,5 +1,5 @@
 from include import *
-from database import Base
+from services.db.database import Base
 
 class User(Base):
 	__tablename__ = 'users'
@@ -18,6 +18,7 @@ class Request(Base):
 
 	id = Column(Integer, primary_key=True, index=True)
 	user_id = Column(Integer, ForeignKey('users.id'))
+	type = Column(Integer, nullable=False)
 	tmdb_id = Column(Integer, nullable=False, unique=True)
 	date = Column(String, nullable=False)
 	status = Column(Integer, nullable=False)

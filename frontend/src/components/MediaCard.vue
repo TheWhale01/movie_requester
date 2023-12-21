@@ -11,6 +11,7 @@
 import type Media from '@/interfaces/media.interface';
 import Button from '../components/Button.vue';
 import MediaType from '../interfaces/media_type.enum';
+import environment from '@/interfaces/environment.class';
 
 export default {
 	components: {
@@ -35,7 +36,22 @@ export default {
 	},
 
 	methods: {
-		async request(): Promise<void> { console.log('bonsoir'); },
+		async request(): Promise<void> {
+			const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/request/add`, {
+				method: 'post',
+				headers: {
+					'Authorization': `bearer ${sessionStorage.getItem('access_token')}`,
+					'Content-type': 'application/json',
+				},
+				body: JSON.stringify({
+					'tmdb_id': this.media.tmdb_id,
+					'type': this.media.type,
+				}),
+			});
+			if (!response.ok)
+				console.log('Check error and maybe redirect to login page.');
+		},
+
 		redirect(): void {
 			let type: string = '';
 			switch (this.media.type) {

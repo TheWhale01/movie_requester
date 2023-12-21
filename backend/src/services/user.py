@@ -1,8 +1,6 @@
 from include import *
-import models, schemas
-from privilege import Privilege
-from languages import Languages
-from schemas import UserCreate, RequestCreate
+from services.db.schemas import UserCreate
+from services.db import models
 
 def get_user_by_id(db: Session, user_id: int):
 	return db.query(models.User).filter(models.User.id == user_id).first()
@@ -19,7 +17,3 @@ def create_user(db: Session, user: UserCreate):
 	db.add(db_user)
 	db.commit()
 	db.refresh(db_user)
-
-def get_request_by_id(db: Session, request_id: int):
-	return db.query(models.Request).filter(models.Request.id == request_id).first()
-

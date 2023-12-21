@@ -2,11 +2,24 @@
 	<div class='navbar'>
 		<h1>Movie Requester</h1>
 		<div class='navbar_footer'>
-			<p>Future Button (Requests)</p>
+			<Button @callback="show_requests">Requests</Button>
 			<p>Future Button (Settings)</p>
 		</div>
 	</div>
 </template>
+<script lang="ts">
+import Button from './Button.vue';
+
+export default {
+	components: {
+		Button,
+	},
+
+	methods: {
+		show_requests(): void { console.log('redirecting to requests page.'); }
+	}
+};
+</script>
 <style scoped>
 h1 {
 	padding-top: 15px;
