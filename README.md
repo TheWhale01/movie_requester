@@ -63,3 +63,8 @@ python3 -m alembic revision --autogenerate -m "" #Put a message (like a git comm
 python3 -m alembic upgrade head #Applying last migration
 exit
 ```
+
+## TODO
+Add filter on request for admins to show all requests or not
+Add websockets to update the state of each requests.
+Add Telegram (Bot ?) API to send notification when request is added.

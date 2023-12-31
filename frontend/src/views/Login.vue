@@ -1,5 +1,5 @@
 <template>
-	<div class="login_page_container">
+	<div class="container">
 		<h1>Welcome to Movie Requester !</h1>
 		<div class="form_container">
 			<div class="login_container">
@@ -19,6 +19,7 @@ import Button from '../components/Button.vue';
 import Input from '../components/Input.vue';
 import ErrorMessage from '../components/ErrorMessage.vue';
 import environment from '../interfaces/environment.class';
+import UserService from '@/services/user.service';
 
 export default {
 	components: {
@@ -36,13 +37,14 @@ export default {
 		};
 	},
 
-	async mounted(): Promise<void> {
+	async beforeMount(): Promise<void> {
 		const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/login`, {
 			method: 'get',
 			headers: {'authorization': `bearer ${sessionStorage.getItem('access_token')}`}
 		});
-		if (response.ok)
-			this.$router.push('/');
+		if (!response.ok)
+			return ;
+		this.$router.push('/');
 	},
 
 	methods: {
@@ -90,9 +92,7 @@ h2 {
 	text-align: center;
 }
 
-.login_page_container {
-	height: 100vh;
-	display: flex;
+.container {
 	flex-direction: column;
 }
 

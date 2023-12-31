@@ -4,6 +4,5 @@ export default interface User {
 	id: number;
 	username: string;
 	profile_picture: string;
-	lang: string;
-	requests: Request[];
+	language: string;
 };

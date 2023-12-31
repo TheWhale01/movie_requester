@@ -48,8 +48,11 @@ export default {
 					'type': this.media.type,
 				}),
 			});
-			if (!response.ok)
+			if (!response.ok) {
 				console.log('Check error and maybe redirect to login page.');
+				return ;
+			}
+			this.media.requested = true;
 		},
 
 		redirect(): void {

@@ -19,3 +19,25 @@ async def remove_request(id: int, user: User = Depends(get_current_user)):
 @router.patch('/request/update')
 async def update_request(id: int, status: int, user: User = Depends(get_current_user)):
 	RequestService().update(id, user, status)
+
+@router.get('/request/is_in_db')
+async def is_request_in_db(tmdb_id: int):
+	return {'data': RequestService().is_already_in_db(tmdb_id)}
+
+@router.get('/request')
+async def get_requests(user: User = Depends(get_current_user)):
+	requests = RequestService().get_requests(user.id);
+	return {
+		'data': requests,
+		'total_results': len(requests)
+	}
+
+@router.get('/request/all')
+async def get_requests(user: User = Depends(get_current_user)):
+	if user.privilege != Privilege.ADMIN:
+		raise HTTPException(status_code=401, detail='Only admins can get all requests')
+	requests = RequestService().get_all_request()
+	return {
+		'data': requests,
+		'total_results': len(requests)
+	}

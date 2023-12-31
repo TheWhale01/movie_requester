@@ -2,7 +2,7 @@ from include import *
 from services.auth import get_current_user, create_jwt_token
 from services.db.database import get_db
 from services.db.schemas import UserCreate
-from services.user import get_user_by_username
+from services.user import get_user_by_username, get_user_by_id
 
 router = APIRouter()
 
@@ -23,3 +23,7 @@ async def login(user: UserCreate, db: Session = Depends(get_db)):
 @router.post('/signup')
 async def singup(user: UserCreate, db: Session = Depends(get_db)):
 	create_user(db, user)
+
+@router.get('/user')
+async def get_user(id: int, db: Session = Depends(get_db)):
+	return {'user': get_user_by_id(id)}

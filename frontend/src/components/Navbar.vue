@@ -1,9 +1,9 @@
 <template>
 	<div class='navbar'>
-		<h1>Movie Requester</h1>
+		<button @click="homepage"><h1>Movie Requester</h1></button>
 		<div class='navbar_footer'>
 			<Button @callback="show_requests">Requests</Button>
-			<p>Future Button (Settings)</p>
+			<Button @callback="show_settings">Settings</Button>
 		</div>
 	</div>
 </template>
@@ -16,23 +16,24 @@ export default {
 	},
 
 	methods: {
-		show_requests(): void { console.log('redirecting to requests page.'); }
+		show_requests(): void { this.$router.push('/request'); },
+		show_settings(): void { this.$router.push('/settings'); },
+		homepage(): void { this.$router.push('/'); },
 	}
 };
 </script>
 <style scoped>
 h1 {
-	padding-top: 15px;
+	margin-top: 30px;
 }
 
 .navbar {
-	padding-left: 15px;
-	padding-right: 15px;
 	display: flex;
 	width: 15%;
 	height: 100%;
 	flex-direction: column;
 	justify-content: space-between;
+	align-items: center;
 	background-color: #121a2a;
 	min-width: 200px;
 }
@@ -41,8 +42,13 @@ h1 {
 	padding-bottom: 15px;
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 	justify-content: space-around;
 	width: 100%;
 	height: 30%;
+}
+
+.navbar Button {
+	width: 75%;
 }
 </style>

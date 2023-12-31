@@ -9,6 +9,9 @@ class RequestService:
 	def get_by_id(self, id: int):
 		return self.__db.query(models.Request).filter(models.Request.id == id).first()
 
+	def get_by_tmdb_id(self, tmdb_id: int):
+		return self.__db.query(models.Request).filter(models.Request.tmdb_id == tmdb_id).first()
+
 	def create(self, request: schemas.Request, user: schemas.User):
 		request_status = None
 		if user.privilege == Privilege.ADMIN:
@@ -41,3 +44,13 @@ class RequestService:
 		db_request.status = status;
 		self.__db.commit()
 		return db_request
+	
+	def is_already_in_db(self, tmdb_id: int):
+		return not not self.get_by_tmdb_id(tmdb_id)
+	
+	def get_requests(self, user_id: int):
+		return self.__db.query(models.Request).filter(models.Request.user_id == user_id).all()
+	
+	def get_all_request(self):
+		return self.__db.query(models.Request).all()
+

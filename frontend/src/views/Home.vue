@@ -1,5 +1,5 @@
 <template>
-	<div class='page_container'>
+	<div class='container'>
 		<Navbar />
 		<div class='main_page'>
 			<form @submit.prevent="null">
@@ -25,6 +25,7 @@
 						</ul>
 					</div>
 				</div>
+				<h2 v-else-if="none_results_found">No result found.</h2>
 				<h2 v-else>Search Movies/TV Shows/Animes and other</h2>
 			</div>
 		</div>
@@ -36,8 +37,10 @@ import Input from '../components/Input.vue';
 import Navbar from '../components/Navbar.vue';
 import MediaType from '../interfaces/media_type.enum';
 import type Media from '../interfaces/media.interface';
+import type User from '@/interfaces/user.interface';
 import MediaCard from '../components/MediaCard.vue';
 import Button from '@/components/Button.vue';
+import UserService from '@/services/user.service';
 
 export default {
 	components: {
@@ -53,17 +56,26 @@ export default {
 			movies: [] as Media[],
 			tv_shows: [] as Media[],
 			query: '' as string,
+			none_results_found: false as boolean,
 			base_poster_path: 'https://image.tmdb.org/t/p/original' as string,
 		};
 	},
 
-	async mounted(): Promise<void> {
+	async beforeMount(): Promise<void> {
 		const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/login`, {
 			method: 'get',
 			headers: { 'authorization': `bearer ${sessionStorage.getItem('access_token')}` }
 		});
 		if (!response.ok)
 			this.$router.push('/login');
+		const response_json = await response.json();
+		let user: User = {
+			id: response_json['user']['id'],
+			language: response_json['user']['language'],
+			profile_picture: response_json['user']['profile_picture'],
+			username: response_json['user']['username']
+		};
+		UserService.setUser(user);
 	},
 
 	methods: {
@@ -78,6 +90,7 @@ export default {
 
 		async search(): Promise<void> {
 			this.result_found = false;
+			this.none_results_found = false;
 			this.movies = [];
 			this.tv_shows = [];
 			if (!this.query)
@@ -91,10 +104,16 @@ export default {
 				return;
 			}
 			const response_json = await response.json();
+			if (response_json['total_results'] === 0) {
+				this.none_results_found = true;
+				return ;
+			}
 			for (let item of response_json['results']) {
 				let poster_path: string = '';
 				let poster_found: boolean = true;
-				let requested: boolean = false;
+				let requested: boolean = (await (await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/request/is_in_db?tmdb_id=${item['id']}`, {
+					method: 'get',
+				})).json())['data'];
 
 				//TODO: check if the movie is already requested in the database
 				if ('poster_path' in item && item['poster_path'])
@@ -168,21 +187,6 @@ form Button {
 	height: 50px;
 	border-radius: 50%;
 	font-size: 1.3em;
-}
-
-.page_container {
-	display: flex;
-	height: 100vh;
-	width: 100%;
-}
-
-.main_page {
-	display: flex;
-	flex-direction: column;
-	width: 85%;
-	padding-top: 15px;
-	padding-left: 15px;
-	padding-right: 15px;
 }
 
 .result_field {

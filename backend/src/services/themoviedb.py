@@ -24,5 +24,9 @@ class TheMovieDB:
 	def get_tv_details(self, id: int, language: str = 'fr-FR'):
 		url = self.__global_endpoint + f'/tv/{id}?language={language}'
 		return self.__get_response_from_url(url)
+	
+	def get_movie_details(self, id: int, language: str = 'fr-FR'):
+		url = self.__global_endpoint + f'/movie/{id}?language={language}'
+		return self.__get_response_from_url(url)
 
 themoviedb = TheMovieDB()
