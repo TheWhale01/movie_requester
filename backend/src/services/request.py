@@ -36,7 +36,7 @@ class RequestService:
 		self.__db.commit()
 
 	def update(self, id: int, user: schemas.User, status: int):
-		if status != Status.PENDING and status != Status.ACCEPTED and status != Status.REFUSED:
+		if status != Status.PENDING and status != Status.ACCEPTED and status != Status.REFUSED and status != Status.FINISHED:
 			raise HTTPException(status_code=401, detail='Status not valid')
 		db_request = self.get_by_id(id)
 		if not db_request:

@@ -5,12 +5,13 @@
 			<span>{{ media.title }}</span>
 		</div>
 		<div class="middle">
-			<span>Status: <Status :type="request.type" /></span>
+			<span>Status: <Status :statusProps="request.status" /></span>
 			<span>Requested by: {{ user.username }}</span>
 			<span>Request from: {{ request.date }}</span>
 		</div>
-		<div class="right">
+		<div class="right" v-if="user.privilege == 0">
 			<Button v-if="request.status == 0" @click="update(1)">Accept</Button>
+			<Button v-if="request.status == 0" @click="update(2)">Deny</Button>
 			<Button v-else-if="request.status == 1" @click="update(3)">Finish</Button>
 			<Button @click="delete_request">Delete</Button>
 		</div>
@@ -19,12 +20,13 @@
 <script lang="ts">
 import type Request from '@/interfaces/request.interface';
 import type Media from '@/interfaces/media.interface';
-import type StatusType from '@/interfaces/status_type.enum';
+import StatusType from '@/interfaces/status_type.enum';
 import Status from './Status.vue';
 import MediaType from '@/interfaces/media_type.enum';
 import environment from '@/interfaces/environment.class';
 import Button from './Button.vue';
 import UserService from '@/services/user.service';
+import type User from '@/interfaces/user.interface';
 
 export default {
 	components: {
@@ -42,12 +44,13 @@ export default {
 	data() {
 		return {
 			media: {} as Media,
+		    user: {} as User,
 		};
 	},
 
 	async mounted(): Promise<void> {
 		let type: string = '';
-		console.log(UserService.getUser);
+		this.user = UserService.getUser
 
 		switch (this.request.type) {
 			case MediaType.MOVIE:
@@ -66,10 +69,6 @@ export default {
 		if (!response.ok)
 			return ;
 		const response_json = await response.json();
-		if (this.request.type == MediaType.MOVIE)
-			this.media.nb_seasons = 0;
-		else
-			console.log('bonsoir !');
 		this.media.poster = 'https://image.tmdb.org/t/p/original' + response_json['poster_path'];
 		this.media.poster_found = true;
 		this.media.requested = true;
@@ -84,8 +83,10 @@ export default {
 	methods: {
 		async update(status: StatusType): Promise<void> {
 			const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/request/update?id=${this.request.id}&status=${status}`, {
-				method: 'patch',
-				headers: {'Authorization': `bearer ${sessionStorage.getItem('access_token')}`},
+				method: 'PATCH',
+				headers: {
+					'Authorization': `bearer ${sessionStorage.getItem('access_token')}`,
+				},
 			});
 			if (!response.ok) {
 				console.log(await response.text());

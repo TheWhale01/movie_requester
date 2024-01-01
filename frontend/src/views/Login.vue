@@ -19,7 +19,6 @@ import Button from '../components/Button.vue';
 import Input from '../components/Input.vue';
 import ErrorMessage from '../components/ErrorMessage.vue';
 import environment from '../interfaces/environment.class';
-import UserService from '@/services/user.service';
 
 export default {
 	components: {
@@ -107,7 +106,7 @@ h2 {
 	display: flex;
 	flex-direction: column;
 	width: 30%;
-	height: 40%;
+	height: 55%;
 }
 
 .login_container form {

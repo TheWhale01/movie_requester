@@ -1,6 +1,6 @@
 enum Privilege {
-	USER,
 	ADMIN,
+	USER,
 };
 
 export default Privilege;

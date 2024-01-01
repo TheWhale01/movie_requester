@@ -61,23 +61,6 @@ export default {
 		};
 	},
 
-	async beforeMount(): Promise<void> {
-		const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/login`, {
-			method: 'get',
-			headers: { 'authorization': `bearer ${sessionStorage.getItem('access_token')}` }
-		});
-		if (!response.ok)
-			this.$router.push('/login');
-		const response_json = await response.json();
-		let user: User = {
-			id: response_json['user']['id'],
-			language: response_json['user']['language'],
-			profile_picture: response_json['user']['profile_picture'],
-			username: response_json['user']['username']
-		};
-		UserService.setUser(user);
-	},
-
 	methods: {
 		update_query(value: string): void {
 			if (!value) {

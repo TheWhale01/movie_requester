@@ -89,8 +89,8 @@ export default {
 .card_container:hover .request_btn { display: block; }
 
 .media_poster {
-	width: 300px;
-	height: auto;
+	width: 200px;
+    height: auto;
 	opacity: 0;
 }
 

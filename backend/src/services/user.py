@@ -12,6 +12,8 @@ def create_user(db: Session, user: UserCreate):
 	#TODO: Check for password syntax (Raise HTTPException if not valid)
 	hashedpwd = bcrypt.hashpw(user.password.encode(), bcrypt.gensalt()).decode()
 	db_user = models.User(
+        language='fr-FR',
+        privilege=Privilege.ADMIN,
 		username=user.username,
 		password = hashedpwd,
 	)

@@ -2,7 +2,7 @@ from include import *
 from services.auth import get_current_user, create_jwt_token
 from services.db.database import get_db
 from services.db.schemas import UserCreate
-from services.user import get_user_by_username, get_user_by_id
+from services.user import get_user_by_username, get_user_by_id, create_user
 
 router = APIRouter()
 

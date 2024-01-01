@@ -6,35 +6,49 @@ import StatusType from '@/interfaces/status_type.enum';
 
 export default {
 	props: {
-		status: {type: Number},
+		statusProps: {type: Number, required: true},
 	},
 
 	data() {
 		return {
 			str: '' as string,
 			class: '' as string,
+			status: -1 as number,
 		};
 	},
 
-	beforeMount(): void {
-		switch (this.status) {
-			case StatusType.PENDING:
-				this.str = 'Pending';
-				break ;
-			case StatusType.ACCEPTED:
-				this.str = 'Accepted';
-				break ;
-			case StatusType.REFUSED:
-				this.str = 'Refused';
-				break ;
-			case StatusType.FINISHED:
-				this.str = 'Finished';
-				break ;
-			default:
-				this.str = 'Pending';
-				break;
+	watch: {
+		statusProps: function(newStatus, oldStatus) {
+			this.status = newStatus;
+			this.$forceUpdate();
+		},
+	},
+
+	mounted(): void { this.getStatus(); },
+	updated(): void { this.getStatus(); },
+
+	methods: {
+		getStatus(): void {
+			this.status = this.statusProps
+			switch (this.status) {
+				case StatusType.PENDING:
+					this.str = 'Pending';
+					break ;
+				case StatusType.ACCEPTED:
+					this.str = 'Accepted';
+					break ;
+				case StatusType.REFUSED:
+					this.str = 'Refused';
+					break ;
+				case StatusType.FINISHED:
+					this.str = 'Finished';
+					break ;
+				default:
+					this.str = 'Pending';
+					break;
+			}
+			this.class = this.str.toLowerCase();
 		}
-		this.class = this.str.toLowerCase();
 	}
 }
 </script>
@@ -58,6 +72,6 @@ span {
 }
 
 .finished {
-	background-color: yellow;
+	background-color: #ffcc3f;
 }
 </style>

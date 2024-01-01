@@ -66,5 +66,7 @@ exit
 
 ## TODO
 Add filter on request for admins to show all requests or not
-Add websockets to update the state of each requests.
 Add Telegram (Bot ?) API to send notification when request is added.
+
+## OPTIMISATIONS
+Do not re fetch all the requests from a user when one is deleted
