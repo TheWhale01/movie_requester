@@ -26,21 +26,21 @@
 					</div>
 				</div>
 				<h2 v-else-if="none_results_found">No result found.</h2>
+				<Loading v-else-if="show_loading" />
 				<h2 v-else>Search Movies/TV Shows/Animes and other</h2>
 			</div>
 		</div>
 	</div>
 </template>
 <script lang="ts">
+import Loading from '@/components/Loading.vue';
 import environment from '../interfaces/environment.class';
 import Input from '../components/Input.vue';
 import Navbar from '../components/Navbar.vue';
 import MediaType from '../interfaces/media_type.enum';
 import type Media from '../interfaces/media.interface';
-import type User from '@/interfaces/user.interface';
 import MediaCard from '../components/MediaCard.vue';
 import Button from '@/components/Button.vue';
-import UserService from '@/services/user.service';
 
 export default {
 	components: {
@@ -48,6 +48,7 @@ export default {
 		Navbar,
 		MediaCard,
 		Button,
+		Loading,
 	},
 
 	data() {
@@ -57,6 +58,7 @@ export default {
 			tv_shows: [] as Media[],
 			query: '' as string,
 			none_results_found: false as boolean,
+			show_loading: false as boolean,
 			base_poster_path: 'https://image.tmdb.org/t/p/original' as string,
 		};
 	},
@@ -72,6 +74,7 @@ export default {
 		},
 
 		async search(): Promise<void> {
+			this.show_loading = true;
 			this.result_found = false;
 			this.none_results_found = false;
 			this.movies = [];
@@ -135,6 +138,7 @@ export default {
 					});
 				}
 			}
+			this.show_loading = false;
 			this.result_found = true;
 		},
 	}

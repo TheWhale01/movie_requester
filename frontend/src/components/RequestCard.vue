@@ -1,7 +1,8 @@
 <template>
 	<div class="card_container">
 		<div class="left">
-			<img :src="media.poster">
+			<img v-if="!show_loading" :src="media.poster">
+			<Loading v-else/>
 			<span>{{ media.title }}</span>
 		</div>
 		<div class="middle">
@@ -18,6 +19,7 @@
 	</div>
 </template>
 <script lang="ts">
+import Loading from './Loading.vue';
 import type Request from '@/interfaces/request.interface';
 import type Media from '@/interfaces/media.interface';
 import StatusType from '@/interfaces/status_type.enum';
@@ -32,6 +34,7 @@ export default {
 	components: {
 		Status,
 		Button,
+		Loading,
 	},
 
 	props: {
@@ -45,10 +48,12 @@ export default {
 		return {
 			media: {} as Media,
 		    user: {} as User,
+			show_loading: false as boolean,
 		};
 	},
 
 	async mounted(): Promise<void> {
+		this.show_loading = true;
 		let type: string = '';
 		this.user = UserService.getUser
 
@@ -71,6 +76,7 @@ export default {
 		const response_json = await response.json();
 		this.media.poster = 'https://image.tmdb.org/t/p/original' + response_json['poster_path'];
 		this.media.poster_found = true;
+		this.show_loading = false;
 		this.media.requested = true;
 		if (this.request.type == MediaType.TVSHOW)
 			this.media.title = response_json['name'];
