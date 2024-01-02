@@ -65,10 +65,17 @@ exit
 ```
 
 ## TODO
-Add filter on request for admins to show all requests or not
-Add Notifications
-Send notification when request's status has been changed
+- Add filter on request for admins to show all requests or not
+- Add Notifications (frontend)
+- Send notification when request's status has been changed
+- Add creation date for a user
+- Check if a user has been created for more than 24h and the password has not been changed remove it
+- Change status_codes for HTTPExceptions
+- Add websockets so that every changes are instant between clients.
 
 ## OPTIMISATIONS
-Do not re fetch all the requests from a user when one is deleted
-Make mutliple pages when admin want to see all requests (Do not import all rows of the table)
+- Do not re fetch all the requests from a user when one is deleted
+- Make mutliple pages when admin want to see all requests (Do not import all rows of the table)
+
+## BUGS
+- When reloading on the request page admins only see their request and not all (UserService not setup)

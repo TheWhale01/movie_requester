@@ -19,8 +19,6 @@ export default {
 	},
 
 	async beforeMount(): Promise<void> {
-		if (UserService.isSet)
-			return ;
 		const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/login`, {
 			method: 'get',
 			headers: { 'authorization': `bearer ${sessionStorage.getItem('access_token')}` }
@@ -37,7 +35,8 @@ export default {
 			username: response_json['user']['username'],
 			privilege: response_json['user']['privilege'],
 		}
-		UserService.setUser(user);
+		if (!UserService.isSet)
+			UserService.setUser(user);
 	},
 
 	methods: {

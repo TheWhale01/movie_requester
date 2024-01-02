@@ -2,19 +2,23 @@
 	<div class="card_container">
 		<div class="left">
 			<img v-if="!show_loading" :src="media.poster">
-			<Loading v-else/>
+			<Loading v-else />
 			<span>{{ media.title }}</span>
 		</div>
 		<div class="middle">
-			<span>Status: <Status :statusProps="request.status" /></span>
+			<span>Status:
+				<Status :statusProps="request.status" />
+			</span>
 			<span>Requested by: {{ user.username }}</span>
 			<span>Request from: {{ request.date }}</span>
 		</div>
-		<div class="right" v-if="user.privilege == 0">
-			<Button v-if="request.status == 0" @click="update(1)">Accept</Button>
-			<Button v-if="request.status == 0" @click="update(2)">Deny</Button>
-			<Button v-else-if="request.status == 1" @click="update(3)">Finish</Button>
-			<Button @click="delete_request">Delete</Button>
+		<div class="right">
+			<div v-if="current_user.privilege == 0">
+				<Button v-if="request.status == 0" @click="update(1)">Accept</Button>
+				<Button v-if="request.status == 0" @click="update(2)">Deny</Button>
+				<Button v-else-if="request.status == 1" @click="update(3)">Finish</Button>
+				<Button @click="delete_request">Delete</Button>
+			</div>
 		</div>
 	</div>
 </template>
@@ -47,32 +51,42 @@ export default {
 	data() {
 		return {
 			media: {} as Media,
-		    user: {} as User,
+			user: {} as User,
+			current_user: {} as User,
 			show_loading: false as boolean,
 		};
 	},
 
 	async mounted(): Promise<void> {
 		this.show_loading = true;
+		this.current_user = UserService.getUser;
 		let type: string = '';
-		this.user = UserService.getUser
+		const user_response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/user?id=${this.request.user_id}`, {
+			method: 'get',
+			headers: {'Authorization': `bearer ${sessionStorage.getItem('access_token')}`},
+		});
+		if (!user_response.ok) {
+			console.log(await user_response.text());
+			return ;
+		}
+		this.user = (await user_response.json())['user'];
 
 		switch (this.request.type) {
 			case MediaType.MOVIE:
 				type = 'movie';
-				break ;
+				break;
 			case MediaType.TVSHOW:
 				type = 'tv';
-				break ;
+				break;
 			default:
 				break;
 		}
 		const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/get_${type}_details?id=${this.request.tmdb_id}`, {
 			method: 'get',
-			headers: {'Authorization': `bearer ${sessionStorage.getItem('access_token')}`},
+			headers: { 'Authorization': `bearer ${sessionStorage.getItem('access_token')}` },
 		});
 		if (!response.ok)
-			return ;
+			return;
 		const response_json = await response.json();
 		this.media.poster = 'https://image.tmdb.org/t/p/original' + response_json['poster_path'];
 		this.media.poster_found = true;
@@ -96,7 +110,7 @@ export default {
 			});
 			if (!response.ok) {
 				console.log(await response.text());
-				return ;
+				return;
 			}
 			this.request.status = status;
 		},
@@ -104,11 +118,11 @@ export default {
 		async delete_request(): Promise<void> {
 			const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/request/remove?id=${this.request.id}`, {
 				method: 'delete',
-				headers: {'Authorization': `bearer ${sessionStorage.getItem('access_token')}`},
+				headers: { 'Authorization': `bearer ${sessionStorage.getItem('access_token')}` },
 			});
 			if (!response.ok) {
 				console.log(await response.text());
-				return ;
+				return;
 			}
 			this.$emit('removeRequest', this.request);
 		}
@@ -132,7 +146,9 @@ img {
 	border-radius: 20px;
 }
 
-.left, .middle, .right {
+.left,
+.middle,
+.right {
 	display: flex;
 	align-items: center;
 	width: 33%;
@@ -142,7 +158,8 @@ img {
 	padding-left: 15px;
 }
 
-.middle, .right {
+.middle,
+.right {
 	flex-direction: column;
 	justify-content: space-evenly;
 	height: 200px;
@@ -154,4 +171,10 @@ img {
 	align-items: end;
 }
 
+.right div {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	justify-content: space-evenly;
+}
 </style>

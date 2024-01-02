@@ -47,7 +47,7 @@ export default {
 			});
 			const response_json = await response.json();
 			if (!response.ok || !response_json['ok']) {
-				console.log('Notify the user that the message could not be sent');
+				console.log(response_json);
 			}
 		},
 
@@ -64,7 +64,7 @@ export default {
 				}),
 			});
 			if (!response.ok) {
-				this.$router.push('/');
+				this.$router.push('/login');
 				return ;
 			}
 			this.media.requested = true;

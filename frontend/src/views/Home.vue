@@ -87,6 +87,7 @@ export default {
 			});
 			if (!response.ok) {
 				console.log(await response.text());
+				this.$router.push('/login');
 				return;
 			}
 			const response_json = await response.json();
@@ -101,7 +102,6 @@ export default {
 					method: 'get',
 				})).json())['data'];
 
-				//TODO: check if the movie is already requested in the database
 				if ('poster_path' in item && item['poster_path'])
 					poster_path = this.base_poster_path + item['poster_path'];
 				else {

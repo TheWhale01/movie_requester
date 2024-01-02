@@ -16,7 +16,6 @@ class Telegram:
             raise HTTPException(401, detail='Could not get telegram settings')
         type, title, media, username, status = self.__get_media_infos(request)
         poster = 'https://image.tmdb.org/t/p/original' + media['poster_path']
-        print(poster, file=sys.stderr)
         params = {
             'chat_id': self.__chat_id,
             'photo': poster,

@@ -14,32 +14,28 @@
 	</div>
 </template>
 <script lang="ts">
-import Filter from '@/components/Filter.vue';
 import Navbar from '@/components/Navbar.vue';
 import environment from '@/interfaces/environment.class';
 import RequestCard from '@/components/RequestCard.vue';
 import type Request from '@/interfaces/request.interface';
 import UserService from '@/services/user.service';
-import type User from '@/interfaces/user.interface';
+import Privilege from '@/interfaces/privilege.enum';
 
 export default {
 	components: {
 		Navbar,
 		RequestCard,
-		Filter,
 	},
 
 	data() {
 		return {
 			requests: [] as Request[],
 			show_no_requests: false as boolean,
-			user: {} as User,
 		};
 	},
 
 	async mounted(): Promise<void> {
 		this.check_token();
-		this.user = UserService.getUser;
 		await this.getRequests();
 	},
 
@@ -60,7 +56,10 @@ export default {
 
 		async getRequests(): Promise<void> {
 			this.requests = [];
-			const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/request`, {
+			let url: string = `http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/request`
+			if (UserService.getUser?.privilege == Privilege.ADMIN)
+				url += '/all';
+			const response = await fetch(url, {
 				method: 'get',
 				headers: { 'Authorization': `bearer ${sessionStorage.getItem('access_token')}` },
 			});
