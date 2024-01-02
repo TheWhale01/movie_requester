@@ -25,10 +25,11 @@ export default {
 			method: 'get',
 			headers: { 'authorization': `bearer ${sessionStorage.getItem('access_token')}` }
 		});
-		if (!response.ok)
+		if (!response.ok) {
 			this.$router.push('/login');
+			return ;
+		}
 		const response_json = await response.json();
-		console.log(response_json);
 		let user: User = {
 			id: response_json['user']['id'],
 			language: response_json['user']['language'],

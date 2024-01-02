@@ -36,6 +36,21 @@ export default {
 	},
 
 	methods: {
+		async send_msg(request: Request): Promise<void> {
+			const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/telegram/new_request`, {
+				method: 'post',
+				headers: {
+					'Authorization': `bearer ${sessionStorage.getItem('access_token')}`,
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(request),
+			});
+			const response_json = await response.json();
+			if (!response.ok || !response_json['ok']) {
+				console.log('Notify the user that the message could not be sent');
+			}
+		},
+
 		async request(): Promise<void> {
 			const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/request/add`, {
 				method: 'post',
@@ -49,10 +64,11 @@ export default {
 				}),
 			});
 			if (!response.ok) {
-				console.log('Check error and maybe redirect to login page.');
+				this.$router.push('/');
 				return ;
 			}
 			this.media.requested = true;
+			this.send_msg((await response.json())['request']);
 		},
 
 		redirect(): void {

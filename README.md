@@ -66,7 +66,9 @@ exit
 
 ## TODO
 Add filter on request for admins to show all requests or not
-Add Telegram (Bot ?) API to send notification when request is added.
+Add loading screen when searching for movies
+Add Notifications
 
 ## OPTIMISATIONS
 Do not re fetch all the requests from a user when one is deleted
+Make mutliple pages when admin want to see all requests (Do not import all rows of the table)

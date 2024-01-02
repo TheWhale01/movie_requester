@@ -18,7 +18,7 @@ class RequestService:
 			request_status = Status.ACCEPTED
 		else:
 			request_status = Status.PENDING
-		db_request = models.Request(**request.dict(),
+		db_request = models.Request(**request.model_dump(),
 			user_id=user.id,
 			date=datetime.now().strftime('%Y-%m-%d'),
 			status=request_status,

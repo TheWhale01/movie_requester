@@ -24,3 +24,11 @@ class Request(Base):
 	status = Column(Integer, nullable=False)
 
 	user = relationship("User", back_populates='requests')
+
+class TelegramSettings(Base):
+	__tablename__ = 'telegram_settings'
+
+	id = Column(Integer, primary_key=True, index=True)
+	chat_id = Column(String)
+	bot_id = Column(String)
+	active = Column(Boolean)

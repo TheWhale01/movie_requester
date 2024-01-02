@@ -1,5 +1,10 @@
 from pydantic import BaseModel
 
+class TelegramSettings(BaseModel):
+	chat_id: str
+	bot_id: str
+	active: bool
+
 class RequestBase(BaseModel):
 	tmdb_id: int
 	type: int

@@ -14,7 +14,7 @@
 	</div>
 </template>
 <script lang="ts">
-
+import Filter from '@/components/Filter.vue';
 import Navbar from '@/components/Navbar.vue';
 import environment from '@/interfaces/environment.class';
 import RequestCard from '@/components/RequestCard.vue';
@@ -26,6 +26,7 @@ export default {
 	components: {
 		Navbar,
 		RequestCard,
+		Filter,
 	},
 
 	data() {
