@@ -41,6 +41,7 @@ import MediaType from '../interfaces/media_type.enum';
 import type Media from '../interfaces/media.interface';
 import MediaCard from '../components/MediaCard.vue';
 import Button from '@/components/Button.vue';
+import UserService from '@/services/user.service';
 
 export default {
 	components: {

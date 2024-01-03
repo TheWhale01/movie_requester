@@ -5,24 +5,19 @@
         <button @click="sendEvent(3)" :class="{'selected': selected_button === 3}">Change profile picture</button>
         <button @click="sendEvent(4)" :class="{'selected': selected_button === 4}">Change language</button>
         <button @click="sendEvent(5)" :class="{'selected': selected_button === 5}">Notifications</button>
-        <button v-if='user.privilege === 0' @click="sendEvent(6)" :class="{'selected': selected_button === 6}">Create new user</button>
+        <button v-if='is_admin === 0' @click="sendEvent(6)" :class="{'selected': selected_button === 6}">Create new user</button>
         <button class="logout_btn" @click="logout">Logout</button>
     </div>
 </template>
 <script lang="ts">
-import type User from '@/interfaces/user.interface';
 import UserService from '@/services/user.service';
 
 export default {
     data() {
         return {
             selected_button: 1 as number,
-            user: {} as User,
+            is_admin: UserService.getUser.privilege as number,
         };
-    },
-
-    beforeMount(): void {
-        this.user = UserService.getUser;
     },
 
     methods: {

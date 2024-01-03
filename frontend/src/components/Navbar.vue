@@ -18,27 +18,6 @@ export default {
 		Button,
 	},
 
-	async beforeMount(): Promise<void> {
-		const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/login`, {
-			method: 'get',
-			headers: { 'authorization': `bearer ${sessionStorage.getItem('access_token')}` }
-		});
-		if (!response.ok) {
-			this.$router.push('/login');
-			return ;
-		}
-		const response_json = await response.json();
-		let user: User = {
-			id: response_json['user']['id'],
-			language: response_json['user']['language'],
-			profile_picture: response_json['user']['profile_picture'],
-			username: response_json['user']['username'],
-			privilege: response_json['user']['privilege'],
-		}
-		if (!UserService.isSet)
-			UserService.setUser(user);
-	},
-
 	methods: {
 		show_requests(): void { this.$router.push('/request'); },
 		show_settings(): void { this.$router.push('/settings'); },

@@ -1,5 +1,5 @@
 from include import *
-from services.db.schemas import UserCreate
+from services.db.schemas import UserCreate, User
 from services.db import models
 
 def get_user_by_id(db: Session, user_id: int):
@@ -21,3 +21,7 @@ def create_user(db: Session, user: UserCreate):
 	db.commit()
 	db.refresh(db_user)
 	return db_user
+
+def get_partial_user(user: models.User):
+	pydantic_user = User.model_validate(user)
+	return pydantic_user

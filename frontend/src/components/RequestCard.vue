@@ -13,7 +13,7 @@
 			<span>Request from: {{ request.date }}</span>
 		</div>
 		<div class="right">
-			<div v-if="current_user.privilege == 0">
+			<div v-if="is_admin === 0">
 				<Button v-if="request.status == 0" @click="update(1)">Accept</Button>
 				<Button v-if="request.status == 0" @click="update(2)">Deny</Button>
 				<Button v-else-if="request.status == 1" @click="update(3)">Finish</Button>
@@ -52,14 +52,13 @@ export default {
 		return {
 			media: {} as Media,
 			user: {} as User,
-			current_user: {} as User,
 			show_loading: false as boolean,
+			is_admin: UserService.getUser.privilege as number,
 		};
 	},
 
 	async mounted(): Promise<void> {
 		this.show_loading = true;
-		this.current_user = UserService.getUser;
 		let type: string = '';
 		const user_response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/user?id=${this.request.user_id}`, {
 			method: 'get',

@@ -20,6 +20,8 @@ import Button from './Button.vue';
 import Input from './Input.vue';
 import ErrorMessage from './ErrorMessage.vue';
 import environment from '@/interfaces/environment.class';
+import { notify, useNotification } from '@kyvg/vue3-notification';
+import Privilege from '@/interfaces/privilege.enum';
 
 export default {
     components: {
@@ -65,6 +67,20 @@ export default {
                 this.showErrorMsg(JSON.parse(await response.text())['detail']);
                 return ;
             }
+            const new_user = await response.json();
+            let privilege: string = '';
+            if (new_user['privilege'] === Privilege.ADMIN)
+                privilege = 'Admin';
+            else if (new_user['privilege'] === Privilege.USER)
+                privilege = 'User';
+            const notif = useNotification();
+            notif.notify({
+                type: 'success',
+                title: 'New User',
+                text: `New user created<br>
+                Username: <strong>${new_user['username']}</strong><br>
+                Privilege: <strong>${privilege}</strong>`,
+            })
         },
 
         showErrorMsg(error: string): void {

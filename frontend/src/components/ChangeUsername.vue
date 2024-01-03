@@ -14,6 +14,7 @@ import Button from './Button.vue';
 import UserService from '@/services/user.service';
 import Input from './Input.vue';
 import ErrorMessage from './ErrorMessage.vue';
+import { useNotification } from '@kyvg/vue3-notification';
 
 export default {
     components: {
@@ -29,8 +30,6 @@ export default {
             error_msg: '' as string,
         };
     },
-
-    mounted(): void { },
 
     methods: {
         async changeUsername(): Promise<void> {
@@ -58,7 +57,12 @@ export default {
                 language: response_json['user']['language'],
                 privilege: response_json['user']['privilege']
             });
-            // Notify the user that the change has been successfull
+            const notif = useNotification();
+            notif.notify({
+                type: 'success',
+                title: 'User',
+                text: 'Username successfully changed.',
+            })
         },
 
         showErrorMsg(error: string): void {

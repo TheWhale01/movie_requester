@@ -13,6 +13,7 @@ import { RouterLink, RouterView } from 'vue-router'
 			</nav>
 		</div>
 	</header>
+	<notifications position="top center"/>
 	<RouterView />
 </template>
 

@@ -35,25 +35,10 @@ export default {
 	},
 
 	async mounted(): Promise<void> {
-		this.check_token();
 		await this.getRequests();
 	},
 
 	methods: {
-		async check_token(): Promise<void> {
-			const token = sessionStorage.getItem('access_token');
-			if (!token) {
-				this.$router.push('/login');
-				return;
-			}
-			const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/login`, {
-				method: 'get',
-				headers: { 'Authorization': `bearer ${token}` }
-			});
-			if (!response.ok)
-				this.$router.push('/login');
-		},
-
 		async getRequests(): Promise<void> {
 			this.requests = [];
 			let url: string = `http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/request`

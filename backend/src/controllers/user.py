@@ -2,17 +2,17 @@ from include import *
 from services.auth import get_current_user, create_jwt_token
 from services.db.database import get_db
 from services.db.schemas import UserCreate, User
-from services.user import get_user_by_username, get_user_by_id, create_user
+from services.user import *
 
 router = APIRouter()
 
 @router.get('/login')
-async def login_from_token(current_user: dict = Depends(get_current_user)):
-	return {'user': current_user}
+async def login_from_token(current_user = Depends(get_current_user)):
+	return {'user': get_partial_user(current_user)}
 
 @router.get('/user')
 async def get_user(id: int, db: Session = Depends(get_db)):
-	return {'user': get_user_by_id(db, id)}
+	return {'user': get_partial_user(get_user_by_id(db, id))}
 
 @router.post('/login')
 async def login(user: UserCreate, db: Session = Depends(get_db)):
@@ -22,7 +22,7 @@ async def login(user: UserCreate, db: Session = Depends(get_db)):
 	if not bcrypt.checkpw(user.password.encode('utf-8'), db_user.password.encode('utf-8')):
 		raise HTTPException(status_code=401, detail='Wrong password')
 	token = create_jwt_token(db_user.id)
-	return {'user': db_user, 'token': token}
+	return {'user': get_partial_user(db_user), 'token': token}
 
 @router.post('/user/username')
 async def change_username(username: str, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
@@ -34,7 +34,7 @@ async def change_username(username: str, user: User = Depends(get_current_user),
 	db_user.username = username
 	db.commit()
 	db.refresh(db_user)
-	return {'user': db_user}
+	return {'user': get_partial_user(db_user)}
 
 @router.post('/user/create')
 async def create_new_user(user: UserCreate, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
@@ -42,7 +42,7 @@ async def create_new_user(user: UserCreate, current_user: User = Depends(get_cur
 		raise HTTPException(status_code=401, detail='Only admin can create new users')
 	if get_user_by_username(db, user.username):
 		raise HTTPException(status_code=401, detail='Username already taken')
-	return create_user(db, user)
+	return get_partial_user(create_user(db, user))
 
 @router.post('/user/password')
 async def change_password(params: dict,
@@ -56,5 +56,5 @@ async def change_password(params: dict,
 	user.password = bcrypt.hashpw(params['new_password'].encode(), bcrypt.gensalt()).decode()
 	db.commit()
 	db.refresh(user)
-	return {'user': user}
+	return {'user': get_partial_user(user)}
 	

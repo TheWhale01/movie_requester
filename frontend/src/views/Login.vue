@@ -36,7 +36,7 @@ export default {
 		};
 	},
 
-	async beforeMount(): Promise<void> {
+	async beforeCreate(): Promise<void> {
 		const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/login`, {
 			method: 'get',
 			headers: {'authorization': `bearer ${sessionStorage.getItem('access_token')}`}

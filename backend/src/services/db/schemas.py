@@ -28,8 +28,7 @@ class User(UserBase):
 	id: int
 	language: str
 	privilege: int
-	profile_picture: str
-	requests: list[Request] = []
+	profile_picture: str | None
 
 	class Config:
 		from_attributes = True

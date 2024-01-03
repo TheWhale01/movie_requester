@@ -46,15 +46,6 @@ export default {
 		};
 	},
 
-	async mounted(): Promise<void> {
-		const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/login`, {
-			method: 'get',
-			headers: {'authorization': `bearer ${sessionStorage.getItem('access_token')}`}
-		});
-		if (!response.ok)
-			this.$router.push('/login');
-	},
-
 	methods: {
 		getEvent(event: number): void {
 			this.show_change_username = false;
