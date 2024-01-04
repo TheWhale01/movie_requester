@@ -1,60 +1,38 @@
 from include import *
-from services.auth import get_current_user, create_jwt_token
-from services.db.database import get_db
+from services.auth import get_current_user
 from services.db.schemas import UserCreate, User
-from services.user import *
+from services.user import UserService
 
 router = APIRouter()
 
 @router.get('/login')
 async def login_from_token(current_user = Depends(get_current_user)):
-	return {'user': get_partial_user(current_user)}
+	return {'user': UserService().partial(current_user)}
 
 @router.get('/user')
-async def get_user(id: int, db: Session = Depends(get_db)):
-	return {'user': get_partial_user(get_user_by_id(db, id))}
+async def get_user(id: int):
+	return {'user': UserService().get_by_id(id)}
 
 @router.post('/login')
-async def login(user: UserCreate, db: Session = Depends(get_db)):
-	db_user = get_user_by_username(db, user.username)
-	if not db_user:
-		raise HTTPException(status_code=401, detail='No such user')
-	if not bcrypt.checkpw(user.password.encode('utf-8'), db_user.password.encode('utf-8')):
-		raise HTTPException(status_code=401, detail='Wrong password')
-	token = create_jwt_token(db_user.id)
-	return {'user': get_partial_user(db_user), 'token': token}
-
+async def login(user: UserCreate):
+	db_user, token = UserService().login(user)
+	return {'user': db_user, 'token': token}
+	
 @router.post('/user/username')
-async def change_username(username: str, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-	db_user = get_user_by_id(db, user.id)
-	if get_user_by_username(db, username):
-		raise HTTPException(status_code=401, detail='Username already taken')
-	if not db_user:
-		raise HTTPException(status_code=401, detail='No such user')
-	db_user.username = username
-	db.commit()
-	db.refresh(db_user)
-	return {'user': get_partial_user(db_user)}
+async def change_username(username: str, user: User = Depends(get_current_user)):
+	return {'user': UserService().change_username(user, username)}
 
 @router.post('/user/create')
-async def create_new_user(user: UserCreate, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+async def create_new_user(user: UserCreate, current_user: User = Depends(get_current_user)):
 	if current_user.privilege != Privilege.ADMIN:
 		raise HTTPException(status_code=401, detail='Only admin can create new users')
-	if get_user_by_username(db, user.username):
+	if UserService().get_by_username(user.username):
 		raise HTTPException(status_code=401, detail='Username already taken')
-	return get_partial_user(create_user(db, user))
+	return UserService().create(user)
 
 @router.post('/user/password')
-async def change_password(params: dict,
-						  user: User = Depends(get_current_user),
-						  db: Session = Depends(get_db)):
+async def change_password(params: dict, user: User = Depends(get_current_user)):
 	if not params.get('old_password') or not params.get('new_password'):
 		raise HTTPException(status_code=401, detail='Missing body parameters: {"old_password": "", "new_password": ""}')
-	if not bcrypt.checkpw(params['old_password'].encode(), user.password.encode()):
-		raise HTTPException(status_code=401, detail='Wrong password')
-	# TODO: Add verification for password syntax
-	user.password = bcrypt.hashpw(params['new_password'].encode(), bcrypt.gensalt()).decode()
-	db.commit()
-	db.refresh(user)
-	return {'user': get_partial_user(user)}
+	return {'user': UserService().change_password(user, params['old_password'], params['new_password'])}	
 	

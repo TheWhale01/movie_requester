@@ -77,9 +77,7 @@ export default {
             notif.notify({
                 type: 'success',
                 title: 'New User',
-                text: `New user created<br>
-                Username: <strong>${new_user['username']}</strong><br>
-                Privilege: <strong>${privilege}</strong>`,
+                text: `New user created.`,
             })
         },
 

@@ -2,8 +2,7 @@ import requests
 from include import *
 from services.themoviedb import TheMovieDB
 from services.db.schemas import Request
-from services.user import get_user_by_id
-from services.db.database import get_db
+from services.user import UserService
 
 class Telegram:
     def __init__(self, bot_token, chat_id):
@@ -34,7 +33,7 @@ class Telegram:
         status = ''
         type = ''
         title = ''
-        username = get_user_by_id(next(get_db()), request.user_id).username
+        username = UserService().get_by_id(request.user_id).username
         if request.type == Type.MOVIE:
             media = TheMovieDB().get_movie_details(request.tmdb_id)
             type = 'Movie'
@@ -65,5 +64,4 @@ class Telegram:
                 escape_chars = r'_*[]()~`>#+-=|{}.!'
         else:
             raise ValueError('Markdown version must be either 1 or 2!')
-
         return re.sub(f'([{re.escape(escape_chars)}])', r'\\\1', text)

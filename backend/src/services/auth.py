@@ -1,10 +1,10 @@
 from include import *
-from services.user import get_user_by_id
 from services.db.database import get_db
+from services.db import models
+from services.user import UserService
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='login')
 
-# TODO: Generate JWT_SECRET instead of getting it from env
 def create_jwt_token(user_id: int):
     exp_time = datetime.utcnow() + timedelta(minutes=15)
     payload = {'sub': str(user_id), 'exp': exp_time}
@@ -22,7 +22,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
             raise creds_exception
     except jwt.PyJWTError:
         raise creds_exception
-    user = get_user_by_id(db, user_id)
+    user = UserService().get_by_id_full(user_id) 
     if user is None:
         raise creds_exception
     return user
