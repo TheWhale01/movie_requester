@@ -25,9 +25,9 @@
 						</ul>
 					</div>
 				</div>
-				<h2 v-else-if="none_results_found">No result found.</h2>
+				<h2 class="base_view" v-else-if="none_results_found">No result found.</h2>
 				<Loading v-else-if="show_loading" />
-				<h2 v-else>Search Movies/TV Shows/Animes and other</h2>
+				<h2 class="base_view" v-else>Search Movies/TV Shows/Animes and other</h2>
 			</div>
 		</div>
 	</div>
@@ -41,7 +41,6 @@ import MediaType from '../interfaces/media_type.enum';
 import type Media from '../interfaces/media.interface';
 import MediaCard from '../components/MediaCard.vue';
 import Button from '@/components/Button.vue';
-import UserService from '@/services/user.service';
 
 export default {
 	components: {
@@ -150,12 +149,7 @@ ul {
 	display: flex;
 	flex-direction: row;
 	overflow-x: scroll;
-	-ms-overflow-style: none;
-	scrollbar-width: none;
-}
-
-ul::-webkit-scrollbar {
-	display: none;
+	
 }
 
 form {
@@ -163,6 +157,7 @@ form {
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
+	margin-right: 15px;
 }
 
 form Input {
@@ -177,25 +172,22 @@ form Button {
 	font-size: 1.3em;
 }
 
+.base_view {
+	text-align: center;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+}
+
 .result_field {
-	display: flex;
 	height: 100%;
-	padding-top: 15px;
-	padding-bottom: 15px;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
 }
 
 .result_found {
-	height: 100%;
 	width: 100%;
+	height: 100%;
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
-}
-
-.movie_container, .tvshow_container {
-	height: 50%;
+	justify-content: space-around;
 }
 </style>

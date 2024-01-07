@@ -42,7 +42,6 @@ h1 {
 }
 
 .navbar_footer {
-	padding-bottom: 15px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;

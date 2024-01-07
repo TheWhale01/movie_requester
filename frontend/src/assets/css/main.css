@@ -5,6 +5,12 @@
 	padding: 0;
 	font-family: 'Roboto';
 	color: #f6f9f9;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+ul::-webkit-scrollbar {
+	display: none;
 }
 
 body {
@@ -22,8 +28,8 @@ button {
 }
 
 .container {
-	height: 100vh;
 	width: 100%;
+	height: 100vh;
 	display: flex;
 }
 
@@ -32,8 +38,8 @@ button {
 	flex-direction: column;
 	width: 85%;
 	padding-top: 15px;
+	overflow-x: hidden;
 	padding-left: 15px;
-	padding-right: 15px;
 }
 
 select {

@@ -117,8 +117,8 @@ export default {
 .card_container:hover .request_btn { display: block; }
 
 .media_poster {
-	width: 200px;
-    height: auto;
+	width: auto;
+    height: 35vh;
 	opacity: 0;
 }
 
