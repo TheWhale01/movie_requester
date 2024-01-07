@@ -12,6 +12,7 @@ import type Media from '@/interfaces/media.interface';
 import Button from '../components/Button.vue';
 import MediaType from '../interfaces/media_type.enum';
 import environment from '@/interfaces/environment.class';
+import { useNotification } from '@kyvg/vue3-notification';
 
 export default {
 	components: {
@@ -46,9 +47,20 @@ export default {
 				body: JSON.stringify(request),
 			});
 			const response_json = await response.json();
+			const notif = useNotification();
 			if (!response.ok || !response_json['ok']) {
-				console.log(response_json);
+				notif.notify({
+					type: 'error',
+					title: 'Request',
+					text: 'Could not send message to admin.'
+				});
+				return ;
 			}
+			notif.notify({
+				type: 'success',
+				title: 'Request',
+				text: 'Message sent !'
+			});
 		},
 
 		async request(): Promise<void> {
