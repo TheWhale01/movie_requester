@@ -35,4 +35,7 @@ async def change_password(params: dict, user: User = Depends(get_current_user)):
 	if not params.get('old_password') or not params.get('new_password'):
 		raise HTTPException(status_code=401, detail='Missing body parameters: {"old_password": "", "new_password": ""}')
 	return {'user': UserService().change_password(user, params['old_password'], params['new_password'])}	
-	
+
+@router.post('/user/language')
+async def change_language(lang: str, user: User = Depends(get_current_user)):
+	pass

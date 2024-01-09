@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from fastapi import FastAPI, HTTPException, Depends, APIRouter
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import create_engine, Column, ForeignKey, Integer, String, Boolean
+from sqlalchemy import create_engine, Column, ForeignKey, Integer, String, Boolean, exists
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session, relationship
 from pydantic import BaseModel

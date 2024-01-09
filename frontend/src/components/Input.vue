@@ -6,6 +6,7 @@ export default {
 	props: {
 		placeholder: { type: String },
 		type: { type: String },
+		prefill: { type: String },
 	},
 	data() {
 		return {
@@ -13,6 +14,12 @@ export default {
 			typingTimeout: undefined as number | undefined,
 		};
 	},
+
+	mounted(): void {
+		if (this.prefill)
+			this.output = this.prefill;
+	},
+
 	methods: {
 		handleInput(): void {
 			clearTimeout(this.typingTimeout);
@@ -21,6 +28,13 @@ export default {
 			}, 100);
 		},
 	},
+
+	watch: {
+		prefill: function(newString, oldString): void {
+			this.output = newString;
+			this.$forceUpdate();
+		}
+	}
 };
 </script>
 <style scoped>

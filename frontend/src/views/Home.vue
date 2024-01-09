@@ -79,63 +79,34 @@ export default {
 			this.none_results_found = false;
 			this.movies = [];
 			this.tv_shows = [];
-			if (!this.query)
+			if (!this.query) {
+				this.show_loading = false;
 				return;
+			}
 			const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/search?query=${this.query}`, {
 				method: 'get',
 				headers: { 'Authorization': `bearer ${sessionStorage.getItem('access_token')}` },
 			});
 			if (!response.ok) {
-				console.log(await response.text());
 				this.$router.push('/login');
 				return;
 			}
 			const response_json = await response.json();
 			if (response_json['total_results'] === 0) {
 				this.none_results_found = true;
+				this.show_loading = false;
 				return ;
 			}
 			for (let item of response_json['results']) {
-				let poster_path: string = '';
-				let poster_found: boolean = true;
-				let requested: boolean = (await (await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/request/is_in_db?tmdb_id=${item['id']}`, {
-					method: 'get',
-				})).json())['data'];
-
-				if ('poster_path' in item && item['poster_path'])
-					poster_path = this.base_poster_path + item['poster_path'];
-				else {
-					poster_path = 'https://artworks.thetvdb.com/banners/images/missing/movie.jpg';
-					poster_found = false;
-				}
-				if (item['media_type'] == 'movie') {
-					this.movies.push({
-						title: item['title'],
-						type: MediaType.MOVIE,
-						nb_seasons: 0,
-						tmdb_id: item['id'],
-						poster: poster_path,
-						poster_found: poster_found,
-						requested: requested,
-					});
-				}
-				else if (item['media_type'] == 'tv') {
-					const resp_nb_seasons = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/get_tv_details?id=${item['id']}`, {
-						method: 'get',
-						headers: { 'Authorization': `bearer ${sessionStorage.getItem('access_token')}` }
-					});
-					if (!resp_nb_seasons.ok)
-						return;
-					const nb_seasons = await resp_nb_seasons.json();
-					this.tv_shows.push({
-						title: item['name'],
-						type: MediaType.TVSHOW,
-						tmdb_id: item['id'],
-						nb_seasons: nb_seasons['number_of_seasons'],
-						poster: poster_path,
-						poster_found: poster_found,
-						requested: requested,
-					});
+				switch (item['type']) {
+					case MediaType.MOVIE:
+						this.movies.push(item);
+						break ;
+					case MediaType.TVSHOW:
+						this.tv_shows.push(item);
+						break;
+					default:
+						break;
 				}
 			}
 			this.show_loading = false;

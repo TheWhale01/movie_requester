@@ -46,7 +46,7 @@ class RequestService:
 		return db_request
 	
 	def is_already_in_db(self, tmdb_id: int):
-		return not not self.get_by_tmdb_id(tmdb_id)
+		return self.__db.query(exists().where(models.Request.tmdb_id == tmdb_id)).scalar()
 	
 	def get_requests(self, user_id: int):
 		return self.__db.query(models.Request).filter(models.Request.user_id == user_id).all()

@@ -1,9 +1,18 @@
 from pydantic import BaseModel
 
-class TelegramSettings(BaseModel):
+class TelegramSettingsBase(BaseModel):
 	chat_id: str
 	bot_id: str
+
+class TelegramSettingsCreate(TelegramSettingsBase):
+	pass
+
+class TelegramSettings(TelegramSettingsBase):
+	id: int
 	active: bool
+
+	class Config:
+		from_attributes = True
 
 class RequestBase(BaseModel):
 	tmdb_id: int

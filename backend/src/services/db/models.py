@@ -12,6 +12,7 @@ class User(Base):
 	profile_picture = Column(String)
 
 	requests = relationship("Request", back_populates='user')
+	telegram_settings = relationship('TelegramSettings', back_populates='user', uselist=False)
 
 class Request(Base):
 	__tablename__ = 'requests'
@@ -19,7 +20,7 @@ class Request(Base):
 	id = Column(Integer, primary_key=True, index=True)
 	user_id = Column(Integer, ForeignKey('users.id'))
 	type = Column(Integer, nullable=False)
-	tmdb_id = Column(Integer, nullable=False, unique=True)
+	tmdb_id = Column(Integer, nullable=False, unique=True, index=True)
 	date = Column(String, nullable=False)
 	status = Column(Integer, nullable=False)
 
@@ -29,6 +30,9 @@ class TelegramSettings(Base):
 	__tablename__ = 'telegram_settings'
 
 	id = Column(Integer, primary_key=True, index=True)
-	chat_id = Column(String)
-	bot_id = Column(String)
-	active = Column(Boolean)
+	chat_id = Column(String, nullable=False)
+	bot_id = Column(String, nullable=False)
+	active = Column(Boolean, nullable=False)
+	user_id = Column(Integer, ForeignKey('users.id'), unique=True, nullable=False, index=True)
+
+	user = relationship("User", back_populates='telegram_settings', uselist=False)

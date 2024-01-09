@@ -1,10 +1,82 @@
 import requests
 from include import *
 from services.themoviedb import TheMovieDB
-from services.db.schemas import Request
+from services.db import models
+from services.db.schemas import Request, TelegramSettingsCreate, User
 from services.user import UserService
+from services.db.database import get_db
+from services.auth import get_current_user
 
-class Telegram:
+class TelegramService:
+	def __init__(self):
+		self.__db: Session = next(get_db())
+	
+	def get_by_user_id(self, user_id: int):
+		return self.__db.query(models.TelegramSettings).filter(models.TelegramSettings.user_id == user_id).first()
+	
+	def get_by_id(self, id: int):
+		return self.__db.query(models.TelegramSettings).filter(models.TelegramSettings.id == id).first()
+
+	def exists(self, id: int):
+		return 
+
+	def create(self, settings: TelegramSettingsCreate, user: User):
+		if self.__db.query(exists().where(models.TelegramSettings.user_id == user.id)).scalar():
+			return
+		db_settings = models.TelegramSettings(
+			**settings.model_dump(),
+			active=True,
+			user_id=user.id
+		)
+		self.__db.add(db_settings)
+		self.__db.commit()
+		self.__db.refresh(db_settings)
+		return db_settings
+	
+	def deactivate(self, user_id: int):
+		db_settings = self.get_by_user_id(user_id)	
+		if not db_settings:
+			raise HTTPException(status_code=401, detail='settings not found for user')
+		elif not db_settings.active:
+			raise HTTPException(status_code=401, detail='settings already deactivated')
+		db_settings.active = False
+		self.__db.commit()
+		self.__db.refresh(db_settings)
+		return db_settings
+	
+	def activate(self, user_id: int):
+		db_settings = self.get_by_user_id(user_id)
+		if not db_settings:
+			raise HTTPException(status_code=401, detail='settings not found for user')
+		elif db_settings.active:
+			raise HTTPException(status_code=401, detail='settings already activated')
+		db_settings.active = True
+		self.__db.commit()
+		self.__db.refresh(db_settings)
+		return db_settings
+
+	def update(self, user_id: int, settings: TelegramSettingsCreate):
+		db_settings = self.get_by_user_id(user_id)
+		db_settings.chat_id = settings.chat_id
+		db_settings.bot_id = settings.bot_id
+		self.__db.commit()
+		self.__db.refresh(db_settings);
+		return db_settings
+	
+	def new_request(self, request: Request):
+		data = {"ok": True, "error": None, "user": None}
+		admins = self.__db.query(models.User).filter(models.User.privilege == Privilege.ADMIN).all()
+		for admin in admins:
+			if admin.telegram_settings and admin.telegram_settings.active:
+				helper = TelegramHelper(admin.telegram_settings.bot_id, admin.telegram_settings.chat_id)
+				response = helper.new_request(request)
+				if not response['ok']:
+					data['ok'] = False
+					data['error'] = response['detail']
+					data['user'] = UserService.partial(admin)
+		return data
+
+class TelegramHelper:
     def __init__(self, bot_token, chat_id):
         self.__bot_token = bot_token
         self.__api_endpoint = f'https://api.telegram.org/bot{self.__bot_token}/sendPhoto'

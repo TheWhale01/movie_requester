@@ -6,7 +6,7 @@ from services.user import UserService
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='login')
 
 def create_jwt_token(user_id: int):
-    exp_time = datetime.utcnow() + timedelta(minutes=15)
+    exp_time = datetime.utcnow() + timedelta(minutes=60)
     payload = {'sub': str(user_id), 'exp': exp_time}
     token = jwt.encode(payload, environ['JWT_SECRET'], algorithm=environ['JWT_ALGORITHM'])
     return token

@@ -48,6 +48,9 @@ You will have to populate the *.env files with these environment variables
 ```shell
 docker compose up --build -d
 ```
+## Docs
+Thanks to FastAPI you can have a doc of all the API endpoints
+of the website, you can even try them. Go to http://${BACKEND_HOST}:${BACKEND_PORT}/docs 
 
 ## Migrations
 Database migrations are powered by alembic.
