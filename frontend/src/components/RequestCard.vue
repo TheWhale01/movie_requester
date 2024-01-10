@@ -60,7 +60,7 @@ export default {
 	async mounted(): Promise<void> {
 		this.show_loading = true;
 		let type: string = '';
-		const user_response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/user?id=${this.request.user_id}`, {
+		const user_response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/user?id=${this.request.user_id}`, {
 			method: 'get',
 			headers: {'Authorization': `bearer ${sessionStorage.getItem('access_token')}`},
 		});
@@ -80,7 +80,7 @@ export default {
 			default:
 				break;
 		}
-		const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/get_${type}_details?id=${this.request.tmdb_id}`, {
+		const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/get_${type}_details?id=${this.request.tmdb_id}`, {
 			method: 'get',
 			headers: { 'Authorization': `bearer ${sessionStorage.getItem('access_token')}` },
 		});
@@ -101,7 +101,7 @@ export default {
 
 	methods: {
 		async update(status: StatusType): Promise<void> {
-			const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/request/update?id=${this.request.id}&status=${status}`, {
+			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/request/update?id=${this.request.id}&status=${status}`, {
 				method: 'PATCH',
 				headers: {
 					'Authorization': `bearer ${sessionStorage.getItem('access_token')}`,
@@ -115,7 +115,7 @@ export default {
 		},
 
 		async delete_request(): Promise<void> {
-			const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/request/remove?id=${this.request.id}`, {
+			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/request/remove?id=${this.request.id}`, {
 				method: 'delete',
 				headers: { 'Authorization': `bearer ${sessionStorage.getItem('access_token')}` },
 			});

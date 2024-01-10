@@ -38,7 +38,7 @@ export default {
                 this.showErrorMsg('Please fill all the fields');
                 return ;
             }
-            const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/user/username?username=${this.new_username}`, {
+            const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/user/username?username=${this.new_username}`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `bearer ${sessionStorage.getItem('access_token')}`,

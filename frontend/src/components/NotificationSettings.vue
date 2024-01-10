@@ -69,7 +69,7 @@ export default {
 		},
 
 		async updateSettings(): Promise<void> {
-			const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/telegram/update`, {
+			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/telegram/update`, {
 				method: 'post',
 				headers: {
 					'Authorization': `bearer ${sessionStorage.getItem('access_token')}`,
@@ -97,7 +97,7 @@ export default {
 		},
 
 		async create(): Promise<void> {
-			const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/telegram/create`, {
+			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/telegram/create`, {
 				method: 'post',
 				headers: {
 					'Authorization': `bearer ${sessionStorage.getItem('access_token')}`,
@@ -131,7 +131,7 @@ export default {
 		},
 
 		async deactivate(): Promise<void> {
-			const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/telegram/deactivate`, {
+			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/telegram/deactivate`, {
 				method: 'post',
 				headers: { 'Authorization': `bearer ${sessionStorage.getItem('access_token')}` },
 			});
@@ -152,7 +152,7 @@ export default {
 		},
 
 		async activate(): Promise<void> {
-			const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/telegram/activate`, {
+			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/telegram/activate`, {
 				method: 'post',
 				headers: {'Authorization': `bearer ${sessionStorage.getItem('access_token')}`},
 			});
@@ -173,7 +173,7 @@ export default {
 		},
 
 		async getSettings(): Promise<void> {
-			const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/telegram/get`, {
+			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/telegram/get`, {
 				method: 'get',
 				headers: { 'Authorization': `bearer ${sessionStorage.getItem('access_token')}` },
 			});

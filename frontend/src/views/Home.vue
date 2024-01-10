@@ -83,7 +83,7 @@ export default {
 				this.show_loading = false;
 				return;
 			}
-			const response = await fetch(`http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/search?query=${this.query}`, {
+			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/search?query=${this.query}`, {
 				method: 'get',
 				headers: { 'Authorization': `bearer ${sessionStorage.getItem('access_token')}` },
 			});
