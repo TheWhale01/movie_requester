@@ -41,7 +41,7 @@ export default {
 	methods: {
 		async getRequests(): Promise<void> {
 			this.requests = [];
-			let url: string = `http://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/request`
+			let url: string = `${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/request`
 			if (UserService.getUser?.privilege == Privilege.ADMIN)
 				url += '/all';
 			const response = await fetch(url, {

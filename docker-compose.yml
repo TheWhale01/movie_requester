@@ -8,7 +8,7 @@ services:
     volumes:
       - ./frontend:/workspace
     ports:
-      - 8080:8080
+      - 9080:9080
     env_file:
       .env/frontend.env
     working_dir: /workspace
@@ -22,7 +22,7 @@ services:
     volumes:
       - ./backend:/workspace
     ports:
-      - 3000:3000
+      - 3030:3030
     env_file:
       .env/backend.env
     working_dir: /workspace
