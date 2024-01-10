@@ -38,7 +38,7 @@ export default {
 
 	methods: {
 		async send_msg(request: Request): Promise<void> {
-			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/telegram/new_request`, {
+			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.API_ENDPOINT}/telegram/new_request`, {
 				method: 'post',
 				headers: {
 					'Authorization': `bearer ${sessionStorage.getItem('access_token')}`,
@@ -64,7 +64,7 @@ export default {
 		},
 
 		async request(): Promise<void> {
-			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/request/add`, {
+			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.API_ENDPOINT}/request/add`, {
 				method: 'post',
 				headers: {
 					'Authorization': `bearer ${sessionStorage.getItem('access_token')}`,

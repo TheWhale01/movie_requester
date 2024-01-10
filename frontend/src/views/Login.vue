@@ -37,7 +37,7 @@ export default {
 	},
 
 	async beforeCreate(): Promise<void> {
-		const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/login`, {
+		const response = await fetch(`${environment.HTTP_SCHEMA}://movie-requester.thewhale.duckdns.org/api/login`, {
 			method: 'get',
 			headers: {'authorization': `bearer ${sessionStorage.getItem('access_token')}`}
 		});
@@ -58,7 +58,7 @@ export default {
 				this.showLoginError("Please all the fields.");
 				return ;
 			}
-			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/login`, {
+			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.API_ENDPOINT}/login`, {
 				method: 'post',
 				headers: {'Content-Type': 'application/json'},
 				body: JSON.stringify({

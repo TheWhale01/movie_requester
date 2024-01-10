@@ -45,7 +45,7 @@ export default {
                 this.showErrorMsg('Passwords do not match');
                 return;
             }
-            const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/user/password`, {
+            const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.API_ENDPOINT}/user/password`, {
                 method: 'post',
                 headers: {
                     'Authorization': `bearer ${sessionStorage.getItem('access_token')}`,

@@ -56,20 +56,20 @@ export default {
 					await this.activate();
 				else if (!this.activated && this.created)
 					await this.deactivate(); 
-			}
-			else if (this.activated && !this.created) {
-				if (!this.bot_id || !this.chat_id) {
-					this.showErrorMsg("Please fill all the fields");
-					return ;
+				else if (this.activated && !this.created) {
+					if (!this.bot_id || !this.chat_id) {
+						this.showErrorMsg('Please fill all the fields');
+						return ;
+					}
+					await this.create();
 				}
-				await this.create();
 			}
 			else if (this.activated && this.created)
 				await this.updateSettings();
 		},
 
 		async updateSettings(): Promise<void> {
-			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/telegram/update`, {
+			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.API_ENDPOINT}/telegram/update`, {
 				method: 'post',
 				headers: {
 					'Authorization': `bearer ${sessionStorage.getItem('access_token')}`,
@@ -97,7 +97,7 @@ export default {
 		},
 
 		async create(): Promise<void> {
-			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/telegram/create`, {
+			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.API_ENDPOINT}/telegram/create`, {
 				method: 'post',
 				headers: {
 					'Authorization': `bearer ${sessionStorage.getItem('access_token')}`,
@@ -131,7 +131,7 @@ export default {
 		},
 
 		async deactivate(): Promise<void> {
-			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/telegram/deactivate`, {
+			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.API_ENDPOINT}/telegram/deactivate`, {
 				method: 'post',
 				headers: { 'Authorization': `bearer ${sessionStorage.getItem('access_token')}` },
 			});
@@ -152,7 +152,7 @@ export default {
 		},
 
 		async activate(): Promise<void> {
-			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/telegram/activate`, {
+			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.API_ENDPOINT}/telegram/activate`, {
 				method: 'post',
 				headers: {'Authorization': `bearer ${sessionStorage.getItem('access_token')}`},
 			});
@@ -173,7 +173,7 @@ export default {
 		},
 
 		async getSettings(): Promise<void> {
-			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/telegram/get`, {
+			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.API_ENDPOINT}/telegram/get`, {
 				method: 'get',
 				headers: { 'Authorization': `bearer ${sessionStorage.getItem('access_token')}` },
 			});
@@ -216,8 +216,7 @@ form {
 	margin-bottom: 50px;
 }
 
-form Input,
-form Button {
+form Input, form Button {
 	width: 100%;
 }
 
@@ -225,6 +224,8 @@ form Button {
 	display: flex;
 	flex-direction: row-reverse;
 	align-items: center;
+	justify-content: space-evenly;
+	width: 100%;
 }
 
 label {

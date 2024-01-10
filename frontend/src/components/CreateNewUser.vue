@@ -52,7 +52,7 @@ export default {
                 this.showErrorMsg('Password mismatch');
                 return ;
             }
-            const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/user/create`, {
+            const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.API_ENDPOINT}/user/create`, {
                 method: 'post',
                 headers: {
                     'Authorization': `bearer ${sessionStorage.getItem('access_token')}`,

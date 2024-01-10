@@ -30,7 +30,7 @@ class UserService:
 		hashedpwd = bcrypt.hashpw(user.password.encode(), bcrypt.gensalt()).decode()
 		db_user = models.User(
   	    	language='fr-FR',
-        	privilege=Privilege.ADMIN,
+        	privilege=Privilege.STANDARD,
 			username=user.username,
 			password = hashedpwd,
 		)

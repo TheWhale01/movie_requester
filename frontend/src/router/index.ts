@@ -30,7 +30,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next): Promise<void> => {
 	if (to.name !== 'login') {
-		const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/login`, {
+		const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.API_ENDPOINT}/login`, {
 			method: 'get',
 			headers: { 'authorization': `bearer ${sessionStorage.getItem('access_token')}` }
 		});
