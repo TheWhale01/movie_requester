@@ -16,6 +16,7 @@ class TelegramSettings(TelegramSettingsBase):
 
 class RequestBase(BaseModel):
 	tmdb_id: int
+	note: str | None
 	type: int
 
 class RequestCreate(RequestBase):

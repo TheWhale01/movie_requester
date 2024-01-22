@@ -1,26 +1,32 @@
 <template>
 	<div class="card_container">
-		<div class="left">
-			<img v-if="!show_loading" :src="media.poster">
-			<Loading v-else />
-			<span>{{ media.title }}</span>
-		</div>
-		<div class="middle">
-			<span>Status:
-				<Status :statusProps="request.status" />
-			</span>
-			<span>Requested by: {{ user.username }}</span>
-			<span>Request from: {{ request.date }}</span>
-		</div>
-		<div class="right">
-			<div v-if="is_admin === 0">
-				<Button v-if="request.status == 0" @click="update(1)">Accept</Button>
-				<Button v-if="request.status == 0" @click="update(2)">Deny</Button>
-				<Button v-else-if="request.status == 1" @click="update(3)">Finish</Button>
-				<Button @click="delete_request">Delete</Button>
+		<div class='infos'>
+			<div class="left">
+				<img v-if="!show_loading" :src="media.poster">
+				<Loading v-else />
+				<span>{{ media.title }}</span>
+			</div>
+			<div class="middle">
+				<span>Status:
+					<Status :statusProps="request.status" />
+				</span>
+				<span>Requested by: {{ user.username }}</span>
+				<span>Request from: {{ request.date }}</span>
+			</div>
+			<div class="right">
+				<div v-if="is_admin === 0">
+					<Button v-if="request.status == 0" @click="update(1)">Accept</Button>
+					<Button v-if="request.status == 0" @click="update(2)">Deny</Button>
+					<Button v-else-if="request.status == 1" @click="update(3)">Finish</Button>
+					<Button @click="delete_request">Delete</Button>
+				</div>
 			</div>
 		</div>
+		<div class='note_container' v-if='is_note'>
+			<p><h2>Note: </h2>{{ request.note }}</p>
+		</div>
 	</div>
+	
 </template>
 <script lang="ts">
 import Loading from './Loading.vue';
@@ -54,10 +60,12 @@ export default {
 			user: {} as User,
 			show_loading: false as boolean,
 			is_admin: UserService.getUser.privilege as number,
+			is_note: false as boolean,
 		};
 	},
 
 	async mounted(): Promise<void> {
+		this.is_note = this.$props.request.note ? true : false;
 		this.show_loading = true;
 		let type: string = '';
 		const user_response = await fetch(`${environment.HTTP_SCHEMA}://${environment.API_ENDPOINT}/user?id=${this.request.user_id}`, {
@@ -131,13 +139,19 @@ export default {
 <style scoped>
 .card_container {
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
 	border-radius: 20px;
-	margin-bottom: 20px;
+	margin-bottom: 15px;
 	background-color: #121a2a;
 	box-shadow: 0px 1px 5px #121a2a;
+}
+
+.infos {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
 }
 
 img {
@@ -175,5 +189,22 @@ img {
 	flex-direction: column;
 	height: 100%;
 	justify-content: space-evenly;
+}
+
+.note_container {
+	margin-left: 15px;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	width: 100%;
+	height: auto;
+	height: 50px;
+	border-top: 1px solid white;
+	overflow-wrap: anywhere;
+	height: fit-content;
+}
+
+.note_container h2 {
+	padding-left: 15px;
+	display: inline;
 }
 </style>

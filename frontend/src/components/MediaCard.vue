@@ -1,10 +1,11 @@
 <template>
+	<RequestNote v-if='show_request_note' @close_request_note='show_request_note = false;' @add_note='request' />
 	<div class='card_container'
 		:style="{'background-image': `url(${media.poster})`}">
 		<img class="media_poster" :src="media.poster" @click="redirect" />
 		<span v-if="!media.poster_found">{{ media.title }}</span>
 		<img class="check_icon" v-if="media.requested" src="../assets/images/check.png" />
-		<Button v-if="!media.requested" class="request_btn" @callback='request'>Request</Button>
+		<Button v-if="!media.requested" class="request_btn" @callback='show_request_note = true;'>Request</Button>
 	</div>
 </template>
 <script lang='ts'>
@@ -13,10 +14,12 @@ import Button from '../components/Button.vue';
 import MediaType from '../interfaces/media_type.enum';
 import environment from '@/interfaces/environment.class';
 import { useNotification } from '@kyvg/vue3-notification';
+import RequestNote from '@/components/RequestNote.vue';
 
 export default {
 	components: {
 		Button,
+		RequestNote,
 	},
 
 	props: {
@@ -26,6 +29,8 @@ export default {
 	data() {
 		return {
 			type: '' as string,
+			show_request_note: false as boolean,
+			request_note: '' as string,
 		};
 	},
 
@@ -63,7 +68,7 @@ export default {
 			});
 		},
 
-		async request(): Promise<void> {
+		async request(note: string | null): Promise<void> {
 			const response = await fetch(`${environment.HTTP_SCHEMA}://${environment.API_ENDPOINT}/request/add`, {
 				method: 'post',
 				headers: {
@@ -73,6 +78,7 @@ export default {
 				body: JSON.stringify({
 					'tmdb_id': this.media.tmdb_id,
 					'type': this.media.type,
+					'note': note,
 				}),
 			});
 			if (!response.ok) {

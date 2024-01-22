@@ -8,10 +8,7 @@
 	</div>
 </template>
 <script lang="ts">
-import type User from '@/interfaces/user.interface';
 import Button from './Button.vue';
-import environment from '@/interfaces/environment.class';
-import UserService from '@/services/user.service';
 
 export default {
 	components: {

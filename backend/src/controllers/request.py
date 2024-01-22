@@ -2,12 +2,12 @@ from include import *
 from services.request import RequestService
 from services.db.schemas import User, RequestCreate
 from services.auth import get_current_user
-from services.user import UserService
 
 router = APIRouter()
 
 @router.post('/request/add')
 async def add_request(request: RequestCreate, user: User = Depends(get_current_user)):
+	print(request.note, file=sys.stderr)
 	request = RequestService().create(request, user)
 	return {'request': request}
 
@@ -32,7 +32,7 @@ async def get_requests(user: User = Depends(get_current_user)):
 	}
 
 @router.get('/request/all')
-async def get_requests(user: User = Depends(get_current_user)):
+async def get_requests_all(user: User = Depends(get_current_user)):
 	if user.privilege != Privilege.ADMIN:
 		raise HTTPException(status_code=401, detail='Only admins can get all requests')
 	requests = RequestService().get_all_request()

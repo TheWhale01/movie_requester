@@ -19,6 +19,7 @@ class Request(Base):
 
 	id = Column(Integer, primary_key=True, index=True)
 	user_id = Column(Integer, ForeignKey('users.id'))
+	note = Column(String)
 	type = Column(Integer, nullable=False)
 	tmdb_id = Column(Integer, nullable=False, unique=True, index=True)
 	date = Column(String, nullable=False)

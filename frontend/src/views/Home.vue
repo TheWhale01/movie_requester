@@ -41,6 +41,7 @@ import MediaType from '../interfaces/media_type.enum';
 import type Media from '../interfaces/media.interface';
 import MediaCard from '../components/MediaCard.vue';
 import Button from '@/components/Button.vue';
+import RequestNote from '@/components/RequestNote.vue';
 
 export default {
 	components: {
@@ -49,6 +50,7 @@ export default {
 		MediaCard,
 		Button,
 		Loading,
+		RequestNote,
 	},
 
 	data() {
@@ -59,7 +61,7 @@ export default {
 			query: '' as string,
 			none_results_found: false as boolean,
 			show_loading: false as boolean,
-			base_poster_path: 'https://image.tmdb.org/t/p/original' as string,
+			show_request_note: true as boolean,
 		};
 	},
 
